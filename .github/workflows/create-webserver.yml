@@ -46,3 +46,6 @@ jobs:
         EOF
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
+      with:
+        title: Request new Placeholder Webserver
+        branch-suffix: timestamp
