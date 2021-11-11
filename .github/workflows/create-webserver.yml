@@ -1,0 +1,48 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Create File
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch: # Run workflow manually (without waiting for the cron to be called), through the Github Actions Workflow page directly
+    inputs:
+      name:
+        description: 'Name to identify the webserver'
+        required: true
+      region:
+        description: 'Where to launch webserver (London, Ireland)'
+        required: false
+        default: 'London'
+      imageHeight:
+        description: 'Height of Image'
+        required: false
+        default: '400'
+      imageWidth:
+        description: 'Height of Image'
+        required: false
+        default: '560'
+      imageType:
+        # https://placekitten.com/, https://placedog.net/, https://placebear.com/, https://www.placecage.com/
+        description: 'Type of Animal (Cat, Dog, Bear, Nicolas Cage)'
+        required: true
+        default: 'Cat'
+
+jobs:
+  create-file:
+    name: Create File
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      # TODO: check if name is unique
+    - run: |
+        cat <<EOF > ${{ github.event.inputs.name }}.yml
+          type:         placeholder-webserver
+          name:         ${{ github.event.inputs.name }}
+          region:       ${{ github.event.inputs.region }}
+          image_height: ${{ github.event.inputs.imageHeight }}
+          image_width:  ${{ github.event.inputs.imageWidth }}
+          image_type:   ${{ github.event.inputs.imageType }}
+        EOF
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
