@@ -1,6 +1,0 @@
-  type:         webserver
-  name:         Star
-  region:       ireland
-  image_height: 400
-  image_width:  560
-  image_type:   cat
