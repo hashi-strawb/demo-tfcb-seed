@@ -76,6 +76,46 @@ resource "tfe_workspace" "webserver" {
   #  queue_all_runs = false
 }
 
+resource "tfe_variable" "webserver-image_height" {
+  for_each     = local.webserver_workspace_files
+  workspace_id = tfe_workspace.webserver[each.key].id
+
+  key         = "image_height"
+  value       = yamldecode(file(each.key))["image_height"]
+  category    = "terraform"
+  description = "height of image"
+}
+resource "tfe_variable" "webserver-image_width" {
+  for_each     = local.webserver_workspace_files
+  workspace_id = tfe_workspace.webserver[each.key].id
+
+  key         = "image_width"
+  value       = yamldecode(file(each.key))["image_width"]
+  category    = "terraform"
+  description = "width of image"
+}
+resource "tfe_variable" "webserver-image_type" {
+  for_each     = local.webserver_workspace_files
+  workspace_id = tfe_workspace.webserver[each.key].id
+
+  key         = "image_type"
+  value       = yamldecode(file(each.key))["image_type"]
+  category    = "terraform"
+  description = "type of image"
+}
+resource "tfe_variable" "webserver-region" {
+  for_each     = local.webserver_workspace_files
+  workspace_id = tfe_workspace.webserver[each.key].id
+
+  key         = "region"
+  value       = yamldecode(file(each.key))["region"]
+  category    = "terraform"
+  description = "region to deploy webserver into"
+}
+# TODO: TF Variables, from webserver/*.yml
+
+
+
 # TODO: update the workspace with a PATCH, to set source-url and source-name:
 # https://www.terraform.io/docs/cloud/api/workspaces.html#update-a-workspace
 
@@ -116,4 +156,3 @@ resource "multispace_run" "webserver" {
 # https://registry.terraform.io/providers/EppO/environment/latest
 # https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/variable
 
-# TODO: TF Variables, from webserver/*.yml
