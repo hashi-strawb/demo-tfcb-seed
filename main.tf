@@ -190,10 +190,10 @@ resource "tfe_variable" "webserver-aws_session_token" {
 provider "multispace" {}
 # Trigger a plan+apply on apply, and a destroy on destroy
 
-resource "time_sleep" "wait_10_seconds" {
+resource "time_sleep" "wait_some_seconds" {
   depends_on = [tfe_workspace.webserver]
 
-  create_duration = "10s"
+  create_duration = "30s"
 }
 resource "multispace_run" "webserver" {
   depends_on = [
@@ -211,13 +211,10 @@ resource "multispace_run" "webserver" {
 
     # And wait at least 10s to ensure that it's created before we attempt to run
     # I don't think this is really needed, but it seems to help
-    time_sleep.wait_10_seconds,
+    time_sleep.wait_some_seconds,
   ]
 
   for_each     = local.webserver_workspace_files
   workspace    = tfe_workspace.webserver[each.key].name
   organization = var.tfe_org
-
-  #  retry = false
-  #  manual_confirm = true
 }
