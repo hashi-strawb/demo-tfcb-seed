@@ -38,7 +38,7 @@ jobs:
     - run: |
         mkdir -p webserver/
         cat <<EOF > webserver/"${{ github.event.inputs.name }}.yml"
-          type:         placeholder-webserver
+          type:         webserver
           name:         ${{ github.event.inputs.name }}
           region:       ${{ github.event.inputs.region }}
           image_height: ${{ github.event.inputs.imageHeight }}

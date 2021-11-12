@@ -1,4 +1,4 @@
-  type:         placeholder-webserver
+  type:         webserver
   name:         London Test
   region:       London
   image_height: 400

@@ -1,4 +1,4 @@
-  type:         placeholder-webserver
+  type:         webserver
   name:         Ireland Test
   region:       Ireland
   image_height: 400
