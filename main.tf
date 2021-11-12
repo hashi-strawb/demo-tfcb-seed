@@ -82,12 +82,19 @@ resource "tfe_workspace" "webserver" {
 provider "multispace" {}
 # Trigger a plan+apply on apply, and a destroy on destroy
 
+resource "time_sleep" "wait_10_seconds" {
+  depends_on = [tfe_workspace.webserver]
+
+  create_duration = "10s"
+}
 resource "multispace_run" "webserver" {
 
   depends_on = [
     # Naturally depends on our webserver workspace existing
-    tfe_workspace.webserver
+    tfe_workspace.webserver,
 
+    # And wait at least 10s to ensure that it's created before we attempt to run
+    time_sleep.wait_10_seconds,
 
     # or our TF module
     # tfe_registry_module.webserver,
