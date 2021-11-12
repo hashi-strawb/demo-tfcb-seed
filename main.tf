@@ -191,6 +191,8 @@ provider "multispace" {}
 # Trigger a plan+apply on apply, and a destroy on destroy
 
 resource "time_sleep" "wait_some_seconds" {
+  for_each = local.webserver_workspace_files
+
   depends_on = [
     # Ensure that we have our TF Vars in place before we trigger a run
     tfe_variable.webserver-aws_access_key_id,
@@ -205,7 +207,7 @@ resource "time_sleep" "wait_some_seconds" {
     tfe_registry_module.webserver,
   ]
 
-  create_duration = "10s"
+  create_duration = "30s"
 }
 resource "multispace_run" "webserver" {
   depends_on = [
