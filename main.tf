@@ -72,13 +72,16 @@ resource "tfe_workspace" "webserver" {
   working_directory = "webserver"
 
 
-  queue_all_runs = false
+  # TODO: set this to False when we use multispace
+  #  queue_all_runs = false
 }
 
 # TODO: update the workspace with a PATCH, to set source-url and source-name:
 # https://www.terraform.io/docs/cloud/api/workspaces.html#update-a-workspace
 
-
+# Currently doesn't place nice with cost estimation & policy checks
+# i.e. https://github.com/mitchellh/terraform-provider-multispace/issues/6
+/*
 provider "multispace" {}
 # Trigger a plan+apply on apply, and a destroy on destroy
 
@@ -105,7 +108,8 @@ resource "multispace_run" "webserver" {
 
   #  retry = false
   #  manual_confirm = true
-}
+}]
+*/
 
 
 # TODO: populate AWS creds, from this workspace's env vars
