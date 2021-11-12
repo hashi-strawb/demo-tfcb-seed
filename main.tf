@@ -44,6 +44,18 @@ locals {
   webserver_workspace_files = fileset(path.module, "webserver/*.yml")
 }
 
+#
+# Webserver Module
+#
+
+resource "tfe_registry_module" "webserver" {
+  vcs_repo {
+    display_identifier = "hashi-strawb/terraform-aws-webserver"
+    identifier         = "hashi-strawb/terraform-aws-webserver"
+    oauth_token_id     = var.vcs_oauth_github
+  }
+}
+
 
 
 #
