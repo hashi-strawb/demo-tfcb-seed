@@ -10,9 +10,9 @@ on:
         description: 'Name to identify the webserver'
         required: true
       region:
-        description: 'Where to launch webserver (London, Ireland)'
+        description: 'Where to launch webserver (london, ireland)'
         required: false
-        default: 'London'
+        default: 'london'
       imageHeight:
         description: 'Height of Image'
         required: false
@@ -23,9 +23,9 @@ on:
         default: '560'
       imageType:
         # https://placekitten.com/, https://placedog.net/, https://placebear.com/, https://www.placecage.com/
-        description: 'Type of Animal (Cat, Dog, Bear, Nicolas Cage)'
+        description: 'Type of Animal (cat, dog, bear, niccage)'
         required: true
-        default: 'Cat'
+        default: 'cat'
 
 jobs:
   create-file:
