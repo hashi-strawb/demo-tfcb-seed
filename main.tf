@@ -83,7 +83,7 @@ resource "tfe_workspace" "webserver" {
     yamldecode(file(each.key))["region"],
     yamldecode(file(each.key))["image_type"],
   ]
-  auto_apply = false
+  auto_apply = true
 
 
   vcs_repo {
@@ -94,8 +94,7 @@ resource "tfe_workspace" "webserver" {
   working_directory = "webserver"
 
 
-  # TODO: set this to False when we use multispace
-  #  queue_all_runs = false
+  queue_all_runs = false
 }
 
 # TODO: update the workspace with a PATCH, to set source-url and source-name:
@@ -188,7 +187,6 @@ resource "tfe_variable" "webserver-aws_session_token" {
 
 # Currently doesn't place nice with cost estimation & policy checks
 # i.e. https://github.com/mitchellh/terraform-provider-multispace/issues/6
-/*
 provider "multispace" {}
 # Trigger a plan+apply on apply, and a destroy on destroy
 
@@ -198,7 +196,6 @@ resource "time_sleep" "wait_10_seconds" {
   create_duration = "10s"
 }
 resource "multispace_run" "webserver" {
-
   depends_on = [
     # Naturally depends on our webserver workspace existing
     tfe_workspace.webserver,
@@ -209,17 +206,11 @@ resource "multispace_run" "webserver" {
     # or our TF module
     # tfe_registry_module.webserver,
   ]
+
   for_each     = local.webserver_workspace_files
   workspace    = "webserver-${replace(yamldecode(file(each.key))["name"], " ", "_")}"
   organization = var.tfe_org
 
   #  retry = false
   #  manual_confirm = true
-}]
-*/
-
-
-# TODO: populate AWS creds, from this workspace's env vars
-# https://registry.terraform.io/providers/EppO/environment/latest
-# https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/variable
-
+}
