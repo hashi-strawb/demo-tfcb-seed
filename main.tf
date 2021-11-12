@@ -191,11 +191,6 @@ provider "multispace" {}
 # Trigger a plan+apply on apply, and a destroy on destroy
 
 resource "time_sleep" "wait_some_seconds" {
-  depends_on = [tfe_workspace.webserver]
-
-  create_duration = "30s"
-}
-resource "multispace_run" "webserver" {
   depends_on = [
     # Ensure that we have our TF Vars in place before we trigger a run
     tfe_variable.webserver-aws_access_key_id,
@@ -208,9 +203,14 @@ resource "multispace_run" "webserver" {
 
     # and our TF module
     tfe_registry_module.webserver,
+  ]
 
+  create_duration = "10s"
+}
+resource "multispace_run" "webserver" {
+  depends_on = [
     # And wait at least 10s to ensure that it's created before we attempt to run
-    # I don't think this is really needed, but it seems to help
+    # I'm not entirely sure why this is really needed, but it seems to help
     time_sleep.wait_some_seconds,
   ]
 
