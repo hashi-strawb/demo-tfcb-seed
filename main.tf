@@ -197,18 +197,25 @@ resource "time_sleep" "wait_10_seconds" {
 }
 resource "multispace_run" "webserver" {
   depends_on = [
-    # Naturally depends on our webserver workspace existing
-    tfe_workspace.webserver,
+    # Ensure that we have our TF Vars in place before we trigger a run
+    tfe_variable.webserver-aws_access_key_id,
+    tfe_variable.webserver-aws_secret_access_key,
+    tfe_variable.webserver-aws_session_token,
+    tfe_variable.webserver-image_height,
+    tfe_variable.webserver-image_width,
+    tfe_variable.webserver-image_type,
+    tfe_variable.webserver-region,
+
+    # and our TF module
+    tfe_registry_module.webserver,
 
     # And wait at least 10s to ensure that it's created before we attempt to run
+    # I don't think this is really needed, but it seems to help
     time_sleep.wait_10_seconds,
-
-    # or our TF module
-    # tfe_registry_module.webserver,
   ]
 
   for_each     = local.webserver_workspace_files
-  workspace    = "webserver-${replace(yamldecode(file(each.key))["name"], " ", "_")}"
+  workspace    = tfe_workspace.webserver[each.key].id
   organization = var.tfe_org
 
   #  retry = false
