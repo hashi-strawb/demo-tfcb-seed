@@ -7,6 +7,10 @@ terraform {
       source  = "mitchellh/multispace"
       version = "0.1.0"
     }
+    environment = {
+      source  = "EppO/environment"
+      version = "1.1.0"
+    }
   }
   backend "remote" {
     hostname     = "app.terraform.io"
@@ -42,6 +46,11 @@ locals {
 
 
 
+#
+# Webserver Workspace
+# One per YAML file
+#
+
 resource "tfe_workspace" "webserver" {
   for_each = local.webserver_workspace_files
 
@@ -75,6 +84,14 @@ resource "tfe_workspace" "webserver" {
   # TODO: set this to False when we use multispace
   #  queue_all_runs = false
 }
+
+# TODO: update the workspace with a PATCH, to set source-url and source-name:
+# https://www.terraform.io/docs/cloud/api/workspaces.html#update-a-workspace
+
+#
+# Variables for the Workspace
+# Pull from YAML files
+#
 
 resource "tfe_variable" "webserver-image_height" {
   for_each     = local.webserver_workspace_files
@@ -112,12 +129,49 @@ resource "tfe_variable" "webserver-region" {
   category    = "terraform"
   description = "region to deploy webserver into"
 }
-# TODO: TF Variables, from webserver/*.yml
 
 
+#
+# Pass Through AWS Creds
+# For a demo, this is fine
+# In Production, you would want each workspace to have its own creds
+# e.g. by authenticating with Vault
+#
 
-# TODO: update the workspace with a PATCH, to set source-url and source-name:
-# https://www.terraform.io/docs/cloud/api/workspaces.html#update-a-workspace
+data "environment_variables" "aws" {
+  filter = "AWS_"
+}
+resource "tfe_variable" "webserver-aws_access_key_id" {
+  for_each     = local.webserver_workspace_files
+  workspace_id = tfe_workspace.webserver[each.key].id
+
+  key         = "AWS_ACCESS_KEY_ID"
+  value       = data.environment_variables.aws.items["AWS_ACCESS_KEY_ID"]
+  category    = "env"
+  description = "AWS Access Key ID"
+}
+resource "tfe_variable" "webserver-aws_secret_access_key" {
+  for_each     = local.webserver_workspace_files
+  workspace_id = tfe_workspace.webserver[each.key].id
+
+  key         = "AWS_SECRET_ACCESS_KEY"
+  value       = data.environment_variables.aws.items["AWS_SECRET_ACCESS_KEY"]
+  category    = "env"
+  description = "AWS Secret Access Key"
+  sensitive   = true
+}
+resource "tfe_variable" "webserver-aws_session_token" {
+  for_each     = local.webserver_workspace_files
+  workspace_id = tfe_workspace.webserver[each.key].id
+
+  key         = "AWS_SESSION_TOKEN"
+  value       = data.environment_variables.aws.items["AWS_SESSION_TOKEN"]
+  category    = "env"
+  description = "AWS Session Token"
+  sensitive   = true
+}
+
+
 
 # Currently doesn't place nice with cost estimation & policy checks
 # i.e. https://github.com/mitchellh/terraform-provider-multispace/issues/6
