@@ -82,7 +82,7 @@ resource "tfe_workspace" "webserver" {
     yamldecode(file(each.key))["region"],
     yamldecode(file(each.key))["image_type"],
   ]
-  auto_apply = true
+  auto_apply = false
 
 
   vcs_repo {
