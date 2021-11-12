@@ -67,7 +67,7 @@ resource "tfe_workspace" "webserver" {
   # Prevent workspaces from being destroyed automatically by TF
   # Destroying a workspace does not destroy all resources managed by that workspace
   # An admin would need to trigger a destroy plan first
-  lifecycle = {
+  lifecycle {
     prevent_destroy = true
   }
   # TODO: look into https://registry.terraform.io/providers/mitchellh/multispace/latest/docs/resources/run
