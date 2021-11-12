@@ -30,18 +30,19 @@ Check our webserver/ dir for YAML files, which will be converted to workspace
 
 Expected Format:
 
-$ cat webserver/London\ Test.yml
-  type:         placeholder-webserver
+$ cat workspaces/London\ Test.yml
+  type:         webserver
   name:         London Test
-  region:       London
+  region:       london
   image_height: 400
   image_width:  560
-  image_type:   Cat
+  image_type:   cat
 
 */
 
 locals {
-  webserver_workspace_files = fileset(path.module, "webserver/*.yml")
+  # A future improvement would filter to only those containing type: webserver
+  webserver_workspace_files = fileset(path.module, "workspaces/*.yml")
 }
 
 #

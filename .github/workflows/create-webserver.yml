@@ -36,8 +36,8 @@ jobs:
       uses: actions/checkout@v2
       # TODO: check if name is unique
     - run: |
-        mkdir -p webserver/
-        cat <<EOF > webserver/"${{ github.event.inputs.name }}.yml"
+        mkdir -p workspaces/
+        cat <<EOF > workspaces/"${{ github.event.inputs.name }}.yml"
           type:         webserver
           name:         ${{ github.event.inputs.name }}
           region:       ${{ github.event.inputs.region }}
