@@ -215,7 +215,7 @@ resource "multispace_run" "webserver" {
   ]
 
   for_each     = local.webserver_workspace_files
-  workspace    = tfe_workspace.webserver[each.key].id
+  workspace    = tfe_workspace.webserver[each.key].name
   organization = var.tfe_org
 
   #  retry = false
