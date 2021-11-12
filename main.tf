@@ -83,7 +83,12 @@ provider "multispace" {}
 # Trigger a plan+apply on apply, and a destroy on destroy
 
 resource "multispace_run" "webserver" {
+
   depends_on = [
+    # Naturally depends on our webserver workspace existing
+    tfe_workspace.webserver
+
+
     # or our TF module
     # tfe_registry_module.webserver,
   ]
