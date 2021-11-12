@@ -19,9 +19,15 @@ provider "tfe" {
 
 
 resource "tfe_workspace" "webserver" {
-  name         = "webserver - Test London"
+  name         = "webserver-Test_London"
+  description  = "Placeholder Webserver - Test London"
   organization = "fancycorp"
   tag_names    = ["webserver", "london"]
+  auto_apply   = true
+
+
+  # TODO: vcs_repo, this one
+  # TODO: working_directory, webserver
 }
 
 
