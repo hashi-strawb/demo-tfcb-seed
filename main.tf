@@ -3,6 +3,10 @@ terraform {
     tfe = {
       version = "~> 0.26.0"
     }
+    multispace = {
+      source  = "mitchellh/multispace"
+      version = "0.1.0"
+    }
   }
   backend "remote" {
     hostname     = "app.terraform.io"
@@ -51,7 +55,7 @@ resource "tfe_workspace" "webserver" {
   name = "webserver-${replace(yamldecode(file(each.key))["name"], " ", "_")}"
 
   description  = "Placeholder Webserver - ${yamldecode(file(each.key))["name"]}"
-  organization = "fancycorp"
+  organization = var.tfe_org
   tag_names = [
     yamldecode(file(each.key))["type"],
     yamldecode(file(each.key))["region"],
@@ -60,22 +64,36 @@ resource "tfe_workspace" "webserver" {
   auto_apply = true
 
 
-  # TODO: vcs_repo, this one
-  # TODO: working_directory, webserver
-
-
-  # Prevent workspaces from being destroyed automatically by TF
-  # Destroying a workspace does not destroy all resources managed by that workspace
-  # An admin would need to trigger a destroy plan first
-  lifecycle {
-    prevent_destroy = true
+  vcs_repo {
+    identifier     = "hashi-strawb/demo-tfcb-seed"
+    oauth_token_id = var.vcs_oauth_github
+    branch         = "main"
   }
-  # TODO: look into https://registry.terraform.io/providers/mitchellh/multispace/latest/docs/resources/run
-  # this will trigger an apply on creation, and a destroy on destruction
+  working_directory = "webserver"
 
+
+  queue_all_runs = false
 }
+
 # TODO: update the workspace with a PATCH, to set source-url and source-name:
 # https://www.terraform.io/docs/cloud/api/workspaces.html#update-a-workspace
+
+
+provider "multispace" {}
+# Trigger a plan+apply on apply, and a destroy on destroy
+
+resource "multispace_run" "webserver" {
+  depends_on = [
+    # or our TF module
+    # tfe_registry_module.webserver,
+  ]
+  for_each     = local.webserver_workspace_files
+  workspace    = "webserver-${replace(yamldecode(file(each.key))["name"], " ", "_")}"
+  organization = var.tfe_org
+
+  #  retry = false
+  #  manual_confirm = true
+}
 
 
 # TODO: populate AWS creds, from this workspace's env vars
