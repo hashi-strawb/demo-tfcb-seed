@@ -48,5 +48,5 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
-        title: Request new Placeholder Webserver
+        title: Request new Placeholder Webserver: ${{ github.event.inputs.name }}
         branch-suffix: timestamp
