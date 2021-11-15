@@ -1,0 +1,6 @@
+type:         webserver
+name:         lucytest
+region:       london
+image_height: 400
+image_width:  560
+image_type:   cat
