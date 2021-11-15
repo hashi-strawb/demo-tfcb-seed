@@ -42,8 +42,11 @@ $ cat workspaces/London\ Test.yml
 
 locals {
   # A future improvement would filter to only those containing type: webserver
-  webserver_workspace_files = fileset(path.module, "workspaces/*.yml")
+  webserver_workspaces     = [for f in fileset(path.module, "workspaces/*.yml") : yamldecode(file(f))]
+  webserver_workspaces_map = { for workspace in toset(local.webserver_workspaces) : workspace.name => workspace }
+
 }
+
 
 #
 # Webserver Module
@@ -65,7 +68,7 @@ resource "tfe_registry_module" "webserver" {
 #
 
 resource "tfe_workspace" "webserver" {
-  for_each = local.webserver_workspace_files
+  for_each = local.webserver_workspaces_map
 
   # In reality, you would want some kind of validation here
   # e.g. to check values exist, set default values if they don't,
@@ -74,14 +77,14 @@ resource "tfe_workspace" "webserver" {
   # See https://lmhd.me/tech/2021/05/26/dynamic-terraform/ for an example
 
   # Replace spaces with underscores in workspace name
-  name = "webserver-${replace(yamldecode(file(each.key))["name"], " ", "_")}"
+  name = "webserver-${replace(each.key, " ", "_")}"
 
-  description  = "Placeholder Webserver - ${yamldecode(file(each.key))["name"]}"
+  description  = "Placeholder Webserver - ${each.key}"
   organization = var.tfe_org
   tag_names = [
-    yamldecode(file(each.key))["type"],
-    yamldecode(file(each.key))["region"],
-    yamldecode(file(each.key))["image_type"],
+    each.value["type"],
+    each.value["region"],
+    each.value["image_type"],
   ]
   auto_apply = true
 
@@ -106,38 +109,38 @@ resource "tfe_workspace" "webserver" {
 #
 
 resource "tfe_variable" "webserver-image_height" {
-  for_each     = local.webserver_workspace_files
+  for_each     = local.webserver_workspaces_map
   workspace_id = tfe_workspace.webserver[each.key].id
 
   key         = "image_height"
-  value       = yamldecode(file(each.key))["image_height"]
+  value       = each.value["image_height"]
   category    = "terraform"
   description = "height of image"
 }
 resource "tfe_variable" "webserver-image_width" {
-  for_each     = local.webserver_workspace_files
+  for_each     = local.webserver_workspaces_map
   workspace_id = tfe_workspace.webserver[each.key].id
 
   key         = "image_width"
-  value       = yamldecode(file(each.key))["image_width"]
+  value       = each.value["image_width"]
   category    = "terraform"
   description = "width of image"
 }
 resource "tfe_variable" "webserver-image_type" {
-  for_each     = local.webserver_workspace_files
+  for_each     = local.webserver_workspaces_map
   workspace_id = tfe_workspace.webserver[each.key].id
 
   key         = "image_type"
-  value       = yamldecode(file(each.key))["image_type"]
+  value       = each.value["image_type"]
   category    = "terraform"
   description = "type of image"
 }
 resource "tfe_variable" "webserver-region" {
-  for_each     = local.webserver_workspace_files
+  for_each     = local.webserver_workspaces_map
   workspace_id = tfe_workspace.webserver[each.key].id
 
   key         = "region"
-  value       = yamldecode(file(each.key))["region"]
+  value       = each.value["region"]
   category    = "terraform"
   description = "region to deploy webserver into"
 }
@@ -154,7 +157,7 @@ data "environment_variables" "aws" {
   filter = "AWS_"
 }
 resource "tfe_variable" "webserver-aws_access_key_id" {
-  for_each     = local.webserver_workspace_files
+  for_each     = local.webserver_workspaces_map
   workspace_id = tfe_workspace.webserver[each.key].id
 
   key         = "AWS_ACCESS_KEY_ID"
@@ -163,7 +166,7 @@ resource "tfe_variable" "webserver-aws_access_key_id" {
   description = "AWS Access Key ID"
 }
 resource "tfe_variable" "webserver-aws_secret_access_key" {
-  for_each     = local.webserver_workspace_files
+  for_each     = local.webserver_workspaces_map
   workspace_id = tfe_workspace.webserver[each.key].id
 
   key         = "AWS_SECRET_ACCESS_KEY"
@@ -173,7 +176,7 @@ resource "tfe_variable" "webserver-aws_secret_access_key" {
   sensitive   = true
 }
 resource "tfe_variable" "webserver-aws_session_token" {
-  for_each     = local.webserver_workspace_files
+  for_each     = local.webserver_workspaces_map
   workspace_id = tfe_workspace.webserver[each.key].id
 
   key         = "AWS_SESSION_TOKEN"
@@ -191,7 +194,7 @@ provider "multispace" {}
 # Trigger a plan+apply on apply, and a destroy on destroy
 
 resource "time_sleep" "wait_some_seconds" {
-  for_each = local.webserver_workspace_files
+  for_each = local.webserver_workspaces_map
 
   depends_on = [
     # Ensure that we have our TF Vars in place before we trigger a run
@@ -216,7 +219,7 @@ resource "multispace_run" "webserver" {
     time_sleep.wait_some_seconds,
   ]
 
-  for_each     = local.webserver_workspace_files
+  for_each     = local.webserver_workspaces_map
   workspace    = tfe_workspace.webserver[each.key].name
   organization = var.tfe_org
 }
