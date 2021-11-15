@@ -67,12 +67,13 @@ module "webserver-workspace" {
   source   = "./webserver-workspace"
   for_each = local.webserver_workspaces_map
 
-  tfe_org = var.tfe_org
-
+  tfe_org            = var.tfe_org
   vcs_oauth_token_id = var.vcs_oauth_github
 
   workspace_name        = "webserver-${replace(each.key, " ", "_")}"
   workspace_description = "Placeholder Webserver - ${each.key}"
+  workspace_source_name = "hashi-strawb/demo-tfcb-seed/workspaces/${each.key}"
+  workspace_source_url  = "https://github.com/hashi-strawb/demo-tfcb-seed/blob/main/workspaces/${each.key}"
 
   webserver_type       = each.value["type"]
   webserver_region     = each.value["region"]

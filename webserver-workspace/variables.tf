@@ -37,6 +37,14 @@ variable "workspace_description" {
   type    = string
   default = "Placeholder Webserver - test"
 }
+variable "workspace_source_name" {
+  type    = string
+  default = ""
+}
+variable "workspace_source_url" {
+  type    = string
+  default = ""
+}
 
 #
 # Webserver Config

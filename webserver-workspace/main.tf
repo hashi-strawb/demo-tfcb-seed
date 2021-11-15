@@ -45,8 +45,34 @@ resource "tfe_workspace" "webserver" {
   queue_all_runs = false
 }
 
-# TODO: update the workspace with a PATCH, to set source-url and source-name:
-# https://www.terraform.io/docs/cloud/api/workspaces.html#update-a-workspace
+data "environment_variables" "tfe" {
+  filter = "TFE_TOKEN"
+}
+
+# Set workspace source
+# Not yet supported by the provider
+# https://github.com/hashicorp/terraform-provider-tfe/issues/392
+resource "null_resource" "workspace-source" {
+  provisioner "local-exec" {
+    command     = <<EOF
+		curl -s \
+			--header "Authorization: Bearer ${data.environment_variables.tfe.items["TFE_TOKEN"]}" \
+			--header "Content-Type: application/vnd.api+json" \
+			--request PATCH \
+			--data '{
+				"data": {
+					"type": "workspaces",
+					"attributes": {
+						"source-name": "${var.workspace_source_name}",
+						"source-url": "${var.workspace_source_url}"
+					}
+				}
+			}' \
+			https://app.terraform.io/api/v2/organizations/${var.tfe_org}/workspaces/${var.workspace_name}
+EOF
+    interpreter = ["bash", "-c"]
+  }
+}
 
 #
 # Variables for the Workspace
