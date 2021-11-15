@@ -29,7 +29,7 @@ resource "tfe_workspace" "webserver" {
   tag_names = [
     "type:${var.webserver_type}",
     "region:${var.webserver_region}",
-    "image_type:${var.webserver_image_type}",
+    "imagetype:${var.webserver_image_type}",
   ]
   auto_apply = true
 
