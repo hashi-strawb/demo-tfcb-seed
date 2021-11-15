@@ -16,13 +16,6 @@ terraform {
   }
 }
 
-# Random pet for now.
-# Real example will spin up a webserver using the
-# https://github.com/hashi-strawb/terraform-aws-webserver module
-resource "random_pet" "server" {
-}
-
-
 # We will be spinning up resources in AWS
 # Define the AWS provider, and add tags that will propagate to all resources
 #
