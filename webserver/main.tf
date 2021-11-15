@@ -47,6 +47,10 @@ module "webserver-london" {
   }
 
   ami_name = "${var.ami_name}/${var.ami_version}"
+
+  image_type   = var.image_type
+  image_width  = var.image_width
+  image_height = var.image_height
 }
 
 
@@ -78,4 +82,8 @@ module "webserver-ireland" {
   }
 
   ami_name = "${var.ami_name}/${var.ami_version}"
+
+  image_type   = var.image_type
+  image_width  = var.image_width
+  image_height = var.image_height
 }
