@@ -27,9 +27,9 @@ resource "tfe_workspace" "webserver" {
   description  = var.workspace_description
   organization = var.tfe_org
   tag_names = [
-    var.webserver_type,
-    var.webserver_region,
-    var.webserver_image_type,
+    "type:${var.webserver_type}",
+    "region:${var.webserver_region}",
+    "image_type:${var.webserver_image_type}",
   ]
   auto_apply = true
 
