@@ -38,12 +38,12 @@ jobs:
     - run: |
         mkdir -p workspaces/
         cat <<EOF > workspaces/"${{ github.event.inputs.name }}.yml"
-          type:         webserver
-          name:         ${{ github.event.inputs.name }}
-          region:       ${{ github.event.inputs.region }}
-          image_height: ${{ github.event.inputs.imageHeight }}
-          image_width:  ${{ github.event.inputs.imageWidth }}
-          image_type:   ${{ github.event.inputs.imageType }}
+        type:         webserver
+        name:         ${{ github.event.inputs.name }}
+        region:       ${{ github.event.inputs.region }}
+        image_height: ${{ github.event.inputs.imageHeight }}
+        image_width:  ${{ github.event.inputs.imageWidth }}
+        image_type:   ${{ github.event.inputs.imageType }}
         EOF
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
