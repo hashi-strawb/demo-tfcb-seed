@@ -1,0 +1,6 @@
+type:         webserver
+name:         Test
+region:       ireland
+image_height: 600
+image_width:  300
+image_type:   niccage
