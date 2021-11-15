@@ -39,9 +39,8 @@ provider "aws" {
 module "webserver-london" {
   count = var.region == "london" ? 1 : 0
 
-  #source  = "app.terraform.io/fancycorp/webserver/aws"
-  #version = "0.3.0"
-  source = "github.com/hashi-strawb/terraform-aws-webserver"
+  source  = "app.terraform.io/fancycorp/webserver/aws"
+  version = "0.5.1"
 
   providers = {
     aws = aws.london
@@ -75,9 +74,8 @@ provider "aws" {
 module "webserver-ireland" {
   count = var.region == "ireland" ? 1 : 0
 
-  #source  = "app.terraform.io/fancycorp/webserver/aws"
-  #version = "0.3.0"
-  source = "github.com/hashi-strawb/terraform-aws-webserver"
+  source  = "app.terraform.io/fancycorp/webserver/aws"
+  version = "0.5.1"
 
   providers = {
     aws = aws.ireland
