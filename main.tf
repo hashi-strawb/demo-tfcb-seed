@@ -75,7 +75,9 @@ module "webserver-workspace" {
   workspace_source_name = "hashi-strawb/demo-tfcb-seed/workspaces/${each.key}"
   workspace_source_url  = "https://github.com/hashi-strawb/demo-tfcb-seed/blob/main/workspaces/${each.key}"
 
-  webserver_type       = each.value["type"]
-  webserver_region     = each.value["region"]
-  webserver_image_type = each.value["image_type"]
+  webserver_type         = each.value["type"]
+  webserver_region       = each.value["region"]
+  webserver_image_type   = each.value["image_type"]
+  webserver_image_height = each.value["image_height"]
+  webserver_image_width  = each.value["image_width"]
 }
