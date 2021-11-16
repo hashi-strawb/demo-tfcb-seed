@@ -1,6 +1,0 @@
-type:         webserver
-name:         lucytest
-region:       ireland
-image_height: 200
-image_width:  700
-image_type:   niccage
