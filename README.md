@@ -31,6 +31,14 @@ The Seed workspace must be configured with the following Environment variables:
 * `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` - AWS Credentials
 * `TFE_TOKEN` A Terraform API Key
 
+## Creating a new Workspace
+
+In this example, creating a new workspace requires creating a new YAML file in the `workspaces/` directory of this repo, in the format defined above.
+
+For the sake of making this easier for non-technical users, I have also set up a [GitHub Action](.github/workflows/create-webserver.yml) for this, so users can fill in the details into a form, and then the Action is responsible for raising a Pull Request on the user's behalf:
+
+
+
 ## Caveats
 
 This repo is meant as a Proof-of-Concept, rather than intended to be Production
