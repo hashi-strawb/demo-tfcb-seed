@@ -1,6 +1,0 @@
-type:         webserver
-name:         doggo
-region:       ireland
-image_height: 100
-image_width:  560
-image_type:   dog
