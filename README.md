@@ -40,6 +40,11 @@ any issues that may arise yourself. While HashiCorp support will be there for
 any Terraform Enterprise/Cloud issues, they cannot be expected to understand or
 support all possible configurations.
 
+There is also no validation of parameters in the Terraform code, or GitHub Action.
+While doable with Terraform, this is considered out-of-scope of this demo.
+
+### Multispace Provider
+
 The Terraform code in this repo makes use of the [Multispace Provider](https://registry.terraform.io/providers/mitchellh/multispace/latest/docs),
 which allows for Apply/Destroy runs of other workspaces to be run from a main
 workspace.
@@ -51,5 +56,12 @@ is enabled, nor when there are any Sentinel policies running.
 While the provider is written by Mitchell Hashimoto himself, it is also not
 officially supported by HashiCorp.
 
-There is also no validation of parameters in the Terraform code, or GitHub Action.
-While doable with Terraform, this is considered out-of-scope of this demo.
+### Variables
+
+In this example, I'm configuring resources in AWS, which means I need AWS credentials. In an ideal world, I'd be pulling these dynamically from Vault, but for the sake of a small isolated demo, I'm saving my (Vault-generated) credentials as environment variables within my Seed workspace.
+
+The Seed workspace then copies those variables to the child workspaces. In this example, it uses an Environment Variable provider, as the values of these variables are sensitive. Unfortunately, by doing so, this means those variables are now persisted to my Terraform State. This would not normally be the case with Environment Variables.
+
+A future improvement here would be to make use of the recently announced [Terraform Variable Sets](https://www.hashicorp.com/blog/terraform-cloud-variable-sets-beta-now-available). AWS credentials would be defined there, and the relevant Variable Sets mapped to workspaces that need them.
+
+Alas, as a newly announced feature, still in Beta, the TFE provider [does not yet support these](https://github.com/hashicorp/terraform-provider-tfe/issues/391).
