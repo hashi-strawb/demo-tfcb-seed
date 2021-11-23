@@ -148,6 +148,8 @@ resource "time_sleep" "wait_some_seconds" {
     tfe_variable.webserver-region,
   ]
 
+  # Wait 30s as a workaround for
+  # https://github.com/mitchellh/terraform-provider-multispace/issues/9
   create_duration = "30s"
 }
 resource "multispace_run" "webserver" {
