@@ -4,9 +4,12 @@ terraform {
       version = "~> 0.26.0"
     }
     multispace = {
-      source  = "mitchellh/multispace"
-      version = "0.1.0"
+      #      source = "mitchellh/multispace"
+      # Use my fork until https://github.com/mitchellh/terraform-provider-multispace/pull/8 is merged
+      source  = "lucymhdavies/multispace"
+      version = "0.2.0-alpha5"
     }
+
     environment = {
       source  = "EppO/environment"
       version = "1.1.0"
