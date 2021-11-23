@@ -61,7 +61,7 @@ There is [a bug](https://github.com/mitchellh/terraform-provider-multispace/issu
 in the provider which means that it does not currently work when Price Estimation
 is enabled, nor when there are any Sentinel policies running.
 
-I have a [pull request](https://github.com/mitchellh/terraform-provider-multispace/pull/8) to fix that.
+I have a [pull request](https://github.com/mitchellh/terraform-provider-multispace/pull/8) to fix that, and this repo currently uses [my fork of the provider](https://registry.terraform.io/providers/lucymhdavies/multispace/latest) for the short term.
 
 While the provider is written by Mitchell Hashimoto himself, it is also not
 officially supported by HashiCorp.
