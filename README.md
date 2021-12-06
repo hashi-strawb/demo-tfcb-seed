@@ -51,21 +51,6 @@ support all possible configurations.
 There is also no validation of parameters in the Terraform code, or GitHub Action.
 While doable with Terraform, this is considered out-of-scope of this demo.
 
-### Multispace Provider
-
-The Terraform code in this repo makes use of the [Multispace Provider](https://registry.terraform.io/providers/mitchellh/multispace/latest/docs),
-which allows for Apply/Destroy runs of other workspaces to be run from a main
-workspace.
-
-There is [a bug](https://github.com/mitchellh/terraform-provider-multispace/issues/6)
-in the provider which means that it does not currently work when Price Estimation
-is enabled, nor when there are any Sentinel policies running.
-
-I have a [pull request](https://github.com/mitchellh/terraform-provider-multispace/pull/8) to fix that, and this repo currently uses [my fork of the provider](https://registry.terraform.io/providers/lucymhdavies/multispace/latest) for the short term.
-
-While the provider is written by Mitchell Hashimoto himself, it is also not
-officially supported by HashiCorp.
-
 ### Variables
 
 In this example, I'm configuring resources in AWS, which means I need AWS credentials. In an ideal world, I'd be pulling these dynamically from Vault, but for the sake of a small isolated demo, I'm saving my (Vault-generated) credentials as environment variables within my Seed workspace.
